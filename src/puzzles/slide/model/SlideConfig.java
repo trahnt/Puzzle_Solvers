@@ -2,6 +2,7 @@ package puzzles.slide.model;
 
 import puzzles.common.solver.Configuration;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,13 +16,22 @@ public class SlideConfig implements Configuration {
     private int columns;
     private int[][] grid;
 
+    /**
+     * SlideConfig constructor
+     * @param rows number of puzzle rows
+     * @param columns number of puzzle columns
+     * @param grid puzzle grid
+     */
     public SlideConfig(int rows, int columns, int[][] grid){
         this.rows = rows;
         this.columns = columns;
         this.grid = grid;
     }
 
-
+    /**
+     * Determines whether a SlideConfig is the solution
+     * @return true if solution, false if not
+     */
     @Override
     public boolean isSolution() {
         int previous = 0;
@@ -31,6 +41,10 @@ public class SlideConfig implements Configuration {
         return true;
     }
 
+    /**
+     * Get neighbors of current SlideConfig
+     * @return List of Configurations
+     */
     @Override
     public List<Configuration> getNeighbors() {
         int row=0; int col=0;
@@ -68,6 +82,11 @@ public class SlideConfig implements Configuration {
         return configs;
     }
 
+    /**
+     * Copy int[][]
+     * @param grid grid to be copied
+     * @return copy of grid
+     */
     private int[][] copyGrid(int[][] grid){
         int[][] copy = new int[grid.length][grid[0].length];
         for (int r = 0; r < rows; r++){
@@ -76,15 +95,43 @@ public class SlideConfig implements Configuration {
         return copy;
     }
 
+    /**
+     * Create string representation of slide puzzle config
+     * @return string representation of slide puzzle config
+     */
     @Override
     public String toString(){
         String string = "";
         for (int r = 0; r < rows; r++){
             for (int c = 0; c < columns; c++){
-                // TODO
-            }
-        }
-
+                if (grid[r][c] < 10 || grid[r][c] == rows*columns) string = string + " ";
+                if (grid[r][c] == rows*columns) string = string + ". ";
+                else string = string + grid[r][c] + " ";}
+            string = string + "\n";}
         return string;
+    }
+
+    /**
+     * Determine whether two SlideConfigs are equal
+     * @param other other SlideConfig to compare
+     * @return true if grids are the same, false if not
+     */
+    @Override
+    public boolean equals(Object other){
+        if (!(other instanceof SlideConfig)) return false;
+        SlideConfig o = (SlideConfig) other;
+        for (int r = 0; r < rows; r++){
+            for (int c = 0; c < columns; c++){
+                if (grid[r][c] != o.grid[r][c]) return false;}}
+        return true;
+    }
+
+    /**
+     * Create hashcode of SlideConfig
+     * @return hashcode of SlideConfig's grid
+     */
+    @Override
+    public int hashCode(){
+        return Arrays.deepHashCode(grid);
     }
 }

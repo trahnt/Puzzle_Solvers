@@ -9,11 +9,22 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class contains the main method for the slide puzzle
+ *
+ * @author Trent Wesley taw8452
+ */
 public class Slide {
+    /**
+     * Main method for slide puzzle
+     * @param args file name of slide puzzle input
+     * @throws FileNotFoundException
+     */
     public static void main(String[] args) throws FileNotFoundException {
         if (args.length != 1) {
             System.out.println("Usage: java Slide filename");
         }
+        System.out.println("File: " + args[0]);
         Scanner fileScanner = new Scanner(new File(args[0]));
         int rows = fileScanner.nextInt();
         int columns = fileScanner.nextInt();
@@ -26,6 +37,7 @@ public class Slide {
 
         // create the initial SlideConfig
         SlideConfig initSlide = new SlideConfig(rows, columns, grid);
+        System.out.print(initSlide);
 
         // create Solver
         Solver solver = new Solver();
@@ -40,6 +52,7 @@ public class Slide {
         else{
             for (int i = 0; i < path.size(); i++){
                 System.out.println("Step " + i + ": ");
+                System.out.println(path.get(i));
             }
         }}
     }
