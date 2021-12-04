@@ -55,25 +55,25 @@ public class SlideConfig implements Configuration {
 
         List<Configuration> configs = new LinkedList<>();
         if (row-1 >= 0){
-            int[][] newGrid = copyGrid(grid);
+            int[][] newGrid = copyGrid();
             newGrid[row][col] = newGrid[row-1][col];
             newGrid[row-1][col] = rows*columns;
             Configuration c = new SlideConfig(rows, columns, newGrid);
             configs.add(c);}
         if (row+1 < rows){
-            int[][] newGrid = copyGrid(grid);
+            int[][] newGrid = copyGrid();
             newGrid[row][col] = newGrid[row+1][col];
             newGrid[row+1][col] = rows*columns;
             Configuration c = new SlideConfig(rows, columns, newGrid);
             configs.add(c);}
         if (col-1 >= 0){
-            int[][] newGrid = copyGrid(grid);
+            int[][] newGrid = copyGrid();
             newGrid[row][col] = newGrid[row][col-1];
             newGrid[row][col-1] = rows*columns;
             Configuration c = new SlideConfig(rows, columns, newGrid);
             configs.add(c);}
         if (col+1 < columns){
-            int[][] newGrid = copyGrid(grid);
+            int[][] newGrid = copyGrid();
             newGrid[row][col] = newGrid[row][col+1];
             newGrid[row][col+1] = rows*columns;
             Configuration c = new SlideConfig(rows, columns, newGrid);
@@ -84,10 +84,9 @@ public class SlideConfig implements Configuration {
 
     /**
      * Copy int[][]
-     * @param grid grid to be copied
      * @return copy of grid
      */
-    private int[][] copyGrid(int[][] grid){
+    public int[][] copyGrid(){
         int[][] copy = new int[grid.length][grid[0].length];
         for (int r = 0; r < rows; r++){
             for (int c = 0; c < columns; c++){
@@ -133,5 +132,13 @@ public class SlideConfig implements Configuration {
     @Override
     public int hashCode(){
         return Arrays.deepHashCode(grid);
+    }
+
+    public int[][] getGrid(){
+        return this.grid;
+    }
+
+    public void setGrid(int[][] grid){
+        this.grid = grid;
     }
 }

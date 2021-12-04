@@ -1,9 +1,11 @@
 package puzzles.slide.ptui;
 
 import puzzles.common.Observer;
+import puzzles.slide.model.SlideConfig;
 import puzzles.slide.model.SlideModel;
 import puzzles.slide.model.SlideClientData;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -39,11 +41,32 @@ public class SlidePTUI implements Observer<SlideModel, SlideClientData> {
             String[] words = line.split( "\\s+" );
             if (words.length > 0) {
                 if (words[0].startsWith( "q" )) {
-                    break;
+                    break;}
+
+                else if (words[0].startsWith("l")){
+                    try{
+                        model = new SlideModel(words[1]);
+                    } catch(Exception E){displayHelp();}}
+
+                else if (words[0].startsWith("s")){
+                    try{
+                        int row = Integer.parseInt(words[1]);
+                        int col = Integer.parseInt(words[2]);
+                        model.makeMove(row, col);
+                        System.out.println(model.getCurrentConfig());
+                    } catch(Exception E){displayHelp();}}
+
+                else if (words[0].startsWith("h")){
+                    displayHelp();}
+
+                else if (words[0].startsWith("r")){
+                    model.resetPuzzle();
                 }
+
                 else {
                     displayHelp();
                 }
+
             }
         }
     }
