@@ -64,8 +64,12 @@ public class SlideModel {
                 selected[0] = row; // selected row is set
                 selected[1] = col; // selected column is set
                 move = false;
+                alertObservers(null);
                 return 0;}
-            else return -1;
+            else{
+                alertObservers(null);
+                return -1;
+            }
         }
         else{  // if player making second selection
             if (select2(row, col, selected[0], selected[1])){ // if second selection is valid
@@ -77,9 +81,11 @@ public class SlideModel {
                 grid[row][col] = thing2;
                 grid[selected[0]][selected[1]] = thing1;
                 move = true;
+                alertObservers(null);
                 return 1;}
             else{
                 move = true;
+                alertObservers(null);
                 return -1;}
         }
     }

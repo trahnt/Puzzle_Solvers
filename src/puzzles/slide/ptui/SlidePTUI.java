@@ -25,7 +25,7 @@ public class SlidePTUI implements Observer<SlideModel, SlideClientData> {
 
     @Override
     public void update(SlideModel model, SlideClientData data) {
-        System.out.println(model.getCurrentConfig());
+        // System.out.println(model.getCurrentConfig());
     }
 
     private void displayHelp() {
