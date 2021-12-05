@@ -58,14 +58,15 @@ public class SlideModel {
         initialConfig = new SlideConfig(rows, columns, currentConfig.copyGrid());
     }
 
-    public void makeMove(int row, int col){
+    public int makeMove(int row, int col){
         if (move){ // if player is making first selection
             if (select1(row, col)){ // if selection is valid
                 selected[0] = row; // selected row is set
                 selected[1] = col; // selected column is set
-                move = false;}
-            else System.out.println("Try again buckaroo");
-        }    // player on second selection
+                move = false;
+                return 0;}
+            else return -1;
+        }
         else{  // if player making second selection
             if (select2(row, col, selected[0], selected[1])){ // if second selection is valid
                 int[][] grid = currentConfig.getGrid();
@@ -75,10 +76,11 @@ public class SlideModel {
                 int thing2 = grid[selected[0]][selected[1]];
                 grid[row][col] = thing2;
                 grid[selected[0]][selected[1]] = thing1;
-                move = true;}
+                move = true;
+                return 1;}
             else{
                 move = true;
-                System.out.println("no");}
+                return -1;}
         }
     }
 
@@ -106,5 +108,9 @@ public class SlideModel {
 
     public void resetPuzzle(){
         currentConfig.setGrid(initialConfig.copyGrid());
+    }
+
+    public int[] getSelected(){
+        return this.selected;
     }
 }

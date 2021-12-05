@@ -2,7 +2,7 @@
   <configuration default="false" name="SlidePTUI &lt; slide-2-ptui-in.txt" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="puzzles.slide.ptui.SlidePTUI" />
     <module name="BFSPuzzleSolver2" />
-    <option name="PROGRAM_PARAMETERS" value="data/slide/slide-0.txt" />
+    <option name="PROGRAM_PARAMETERS" value="data/slide/slide-2.txt" />
     <option name="REDIRECT_INPUT" value="true" />
     <option name="INPUT_FILE" value="input/slide-2-ptui-in.txt" />
     <method v="2">
