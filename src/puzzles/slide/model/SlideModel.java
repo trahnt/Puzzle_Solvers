@@ -1,6 +1,7 @@
 package puzzles.slide.model;
 
 import puzzles.common.Observer;
+import puzzles.common.solver.Configuration;
 import puzzles.common.solver.Solver;
 
 import java.io.File;
@@ -58,17 +59,15 @@ public class SlideModel {
         initialConfig = new SlideConfig(rows, columns, currentConfig.copyGrid());
     }
 
-    public int makeMove(int row, int col){
+    public void makeMove(int row, int col){
         if (move){ // if player is making first selection
             if (select1(row, col)){ // if selection is valid
                 selected[0] = row; // selected row is set
                 selected[1] = col; // selected column is set
                 move = false;
-                alertObservers(null);
-                return 0;}
+                alertObservers(new SlideClientData("Selected (" + row + ", " + col + ")"));}
             else{
-                alertObservers(null);
-                return -1;
+                alertObservers(new SlideClientData("Invalid selection (" + row + ", " + col + ")"));
             }
         }
         else{  // if player making second selection
@@ -81,12 +80,11 @@ public class SlideModel {
                 grid[row][col] = thing2;
                 grid[selected[0]][selected[1]] = thing1;
                 move = true;
-                alertObservers(null);
-                return 1;}
+                alertObservers(new SlideClientData("Moved from (" + selected[0] +
+                        ", " + selected[1] + ") to (" + row + ", " + col + ")"));}
             else{
                 move = true;
-                alertObservers(null);
-                return -1;}
+                alertObservers(new SlideClientData("Invalid selection (" + row + ", " + col + ")"));}
         }
     }
 
@@ -114,9 +112,22 @@ public class SlideModel {
 
     public void resetPuzzle(){
         currentConfig.setGrid(initialConfig.copyGrid());
+        alertObservers(new SlideClientData("Puzzle Reset"));
     }
 
-    public int[] getSelected(){
-        return this.selected;
+    public void hint(){
+        Solver solver = new Solver();
+        List<Configuration> path = solver.solve(getCurrentConfig());
+        if (getCurrentConfig().isSolution()) {
+            alertObservers(new SlideClientData("Already Solved"));
+        }
+        else if (path.isEmpty()) alertObservers(new SlideClientData("No Solution"));
+        else {
+            try{
+                SlideConfig s = (SlideConfig) path.get(1);
+                getCurrentConfig().setGrid(s.copyGrid());
+                alertObservers(new SlideClientData("Next Step"));}
+            catch (Exception E) {}
+        }
     }
 }
