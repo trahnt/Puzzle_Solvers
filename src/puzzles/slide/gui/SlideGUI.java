@@ -9,11 +9,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import puzzles.common.Observer;
 import puzzles.slide.model.SlideClientData;
 import puzzles.slide.model.SlideModel;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class SlideGUI extends Application implements Observer<SlideModel, SlideClientData> {
@@ -51,8 +54,17 @@ public class SlideGUI extends Application implements Observer<SlideModel, SlideC
         BorderPane.setAlignment(label, Pos.CENTER);
 
         Button load = new Button("Load");
+        load.setOnAction(event -> {
+            try {
+                chooseFile();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
         Button reset = new Button("Reset");
+        reset.setOnAction(event -> model.resetPuzzle());
         Button hint = new Button("Hint");
+        hint.setOnAction(event -> model.hint());
         HBox hbox = new HBox();
         hbox.getChildren().addAll(load, reset, hint);
         hbox.setAlignment(Pos.CENTER);
@@ -67,7 +79,13 @@ public class SlideGUI extends Application implements Observer<SlideModel, SlideC
     public void update(SlideModel model, SlideClientData data) {
         this.model = model;
         borderPane.setCenter(makeGridPane());
-
+        Label label = new Label(data.data);
+        borderPane.setTop(label);
+        BorderPane.setAlignment(label, Pos.CENTER);
+        int x = model.getCurrentConfig().getGrid()[0].length;
+        int y = model.getCurrentConfig().getGrid().length;
+        stage.setWidth((ICON_SIZE)*x + x*4);
+        stage.setHeight((ICON_SIZE+4)*y + 70);
     }
 
     public static void main(String[] args) {
@@ -81,6 +99,9 @@ public class SlideGUI extends Application implements Observer<SlideModel, SlideC
             for (int r = 0; r < grid.length; r++){
                 if (grid[r][c] == grid.length*grid[0].length){
                     Button button = new Button();
+                    int finalR = r;
+                    int finalC = c;
+                    button.setOnAction(event -> model.makeMove(finalR, finalC));
                     button.setMinSize(ICON_SIZE, ICON_SIZE);
                     button.setMaxSize(ICON_SIZE, ICON_SIZE);
                     gridPane.add(button, c, r);
@@ -89,6 +110,9 @@ public class SlideGUI extends Application implements Observer<SlideModel, SlideC
                     String color = ODD_COLOR;
                     if (grid[r][c] % 2 == 0) color = EVEN_COLOR;
                     Button button = new Button();
+                    int finalR1 = r;
+                    int finalC1 = c;
+                    button.setOnAction(event -> model.makeMove(finalR1, finalC1));
                     button.setStyle(
                             "-fx-font-family: Arial;" +
                                     "-fx-font-size: " + BUTTON_FONT_SIZE + ";" +
@@ -100,5 +124,13 @@ public class SlideGUI extends Application implements Observer<SlideModel, SlideC
                     gridPane.add(button, c, r);}
                 }}
         return gridPane;
+    }
+
+    public void chooseFile() throws FileNotFoundException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("BANANA");
+        fileChooser.setInitialDirectory(new File("data/slide"));
+        File file = fileChooser.showOpenDialog(stage);
+        model.loadFile(file);
     }
 }

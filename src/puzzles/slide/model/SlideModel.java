@@ -5,6 +5,7 @@ import puzzles.common.solver.Configuration;
 import puzzles.common.solver.Solver;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -129,5 +130,20 @@ public class SlideModel {
                 alertObservers(new SlideClientData("Next Step"));}
             catch (Exception E) {}
         }
+    }
+
+    public void loadFile(File file) throws FileNotFoundException {
+        Scanner fileScanner = new Scanner(file);
+        int rows = fileScanner.nextInt();
+        int columns = fileScanner.nextInt();
+        int[][] grid = new int[rows][columns];
+        for (int r = 0; r < rows; r++){
+            for (int c = 0; c < columns; c++){
+                String thing = fileScanner.next();
+                if (thing.equals(".")) grid[r][c] = rows*columns;
+                else grid[r][c] = Integer.parseInt(thing);}}
+        currentConfig = new SlideConfig(rows, columns, grid);
+        initialConfig = new SlideConfig(rows, columns, currentConfig.copyGrid());
+        alertObservers(new SlideClientData("Loaded: " + file));
     }
 }
