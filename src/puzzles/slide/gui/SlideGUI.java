@@ -19,6 +19,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * GUI for slide puzzle
+ *
+ * @author Trent Wesley taw8452
+ */
 public class SlideGUI extends Application implements Observer<SlideModel, SlideClientData> {
     private SlideModel model;
     private BorderPane borderPane;
@@ -36,6 +41,10 @@ public class SlideGUI extends Application implements Observer<SlideModel, SlideC
 
     private Stage stage;
 
+    /**
+     * get filename, create model, and add self as observer of model
+     * @throws IOException
+     */
     @Override
     public void init() throws IOException {
         // get the file name from the command line
@@ -44,6 +53,11 @@ public class SlideGUI extends Application implements Observer<SlideModel, SlideC
         this.model.addObserver(this);
     }
 
+    /**
+     * Start GUI program
+     * @param stage stage for GUI
+     * @throws Exception
+     */
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
@@ -75,10 +89,17 @@ public class SlideGUI extends Application implements Observer<SlideModel, SlideC
         stage.show();
     }
 
+    /**
+     * Update view of GUI
+     * @param model model that view is based on
+     * @param data optional data the server.model can send to the observer
+     */
     @Override
     public void update(SlideModel model, SlideClientData data) {
         this.model = model;
-        borderPane.setCenter(makeGridPane());
+        GridPane gridPane = makeGridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        borderPane.setCenter(gridPane);
         Label label = new Label(data.data);
         borderPane.setTop(label);
         BorderPane.setAlignment(label, Pos.CENTER);
@@ -88,10 +109,18 @@ public class SlideGUI extends Application implements Observer<SlideModel, SlideC
         stage.setHeight((ICON_SIZE+4)*y + 70);
     }
 
+    /**
+     * Launch application
+     * @param args filename
+     */
     public static void main(String[] args) {
         Application.launch(args);
     }
 
+    /**
+     * Make GridPane of buttons to represent slide puzzle
+     * @return gridpane of buttons which represents the slide puzzle
+     */
     public GridPane makeGridPane(){
         GridPane gridPane = new GridPane();
         int[][] grid = model.getCurrentConfig().getGrid();
@@ -126,9 +155,13 @@ public class SlideGUI extends Application implements Observer<SlideModel, SlideC
         return gridPane;
     }
 
+    /**
+     * Choose a file to load
+     * @throws FileNotFoundException
+     */
     public void chooseFile() throws FileNotFoundException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("BANANA");
+        fileChooser.setTitle("Slides");
         fileChooser.setInitialDirectory(new File("data/slide"));
         File file = fileChooser.showOpenDialog(stage);
         model.loadFile(file);

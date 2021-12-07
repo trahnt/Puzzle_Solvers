@@ -1,5 +1,8 @@
 package puzzles.slide.model;
 
+/**
+ * Class which literally just holds a string
+ */
 public class SlideClientData {
     public String data;
 

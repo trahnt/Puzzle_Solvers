@@ -12,23 +12,41 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * PTUI for slide puzzle
+ *
+ * @author Trent Wesley taw8452
+ */
 public class SlidePTUI implements Observer<SlideModel, SlideClientData> {
     private SlideModel model;
 
+    /**
+     * Initialize PTUI
+     * @param filename name of file
+     * @throws IOException
+     */
     public void init(String filename) throws IOException {
         this.model = new SlideModel(filename);
         this.model.addObserver(this);
         System.out.println("Loaded: " + filename);
-        System.out.println(model.getCurrentConfig());
+        System.out.println(model);
         displayHelp();
     }
 
+    /**
+     * update the PTUI view
+     * @param model model that view is based on
+     * @param data optional data the server.model can send to the observer
+     */
     @Override
     public void update(SlideModel model, SlideClientData data) {
         System.out.println(data.data);
-        System.out.println(model.getCurrentConfig());
+        System.out.println(model);
     }
 
+    /**
+     * Display help
+     */
     private void displayHelp() {
         System.out.println( "h(int)              -- hint next move" );
         System.out.println( "l(oad) filename     -- load new puzzle file" );
@@ -37,6 +55,9 @@ public class SlidePTUI implements Observer<SlideModel, SlideClientData> {
         System.out.println( "r(eset)             -- reset the current game" );
     }
 
+    /**
+     * Run PTUI program
+     */
     public void run() {
         Scanner in = new Scanner( System.in );
         for ( ; ; ) {
@@ -52,7 +73,7 @@ public class SlidePTUI implements Observer<SlideModel, SlideClientData> {
                         model = new SlideModel(words[1]);
                         this.model.addObserver(this);
                         System.out.println("Loaded: " + words[1]);
-                        System.out.println(model.getCurrentConfig());
+                        System.out.println(model);
                         displayHelp();
                     } catch(Exception E){displayHelp();}}
 
@@ -64,21 +85,21 @@ public class SlidePTUI implements Observer<SlideModel, SlideClientData> {
                     } catch(Exception E){displayHelp();}}
 
                 else if (words[0].startsWith("h")){
-                    model.hint();
-                }
+                    model.hint();}
 
                 else if (words[0].startsWith("r")){
-                    model.resetPuzzle();
-                }
+                    model.resetPuzzle();}
 
                 else {
-                    displayHelp();
-                }
-
+                    displayHelp();}
             }
         }
     }
 
+    /**
+     * get filename and run PTUI
+     * @param args filename
+     */
     public static void main(String[] args) {
         if (args.length != 1) {
             System.out.println("Usage: java SlidePTUI filename");
